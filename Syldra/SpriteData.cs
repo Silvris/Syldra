@@ -15,7 +15,6 @@ namespace Syldra
         public bool hasPivot = false;
         public bool hasBorder = false;
         public bool hasPPU = false;
-        public bool hasType = false;
         public bool hasWrap = false;
         public bool hasFilter = false;
         public bool hasMeshType = false;
@@ -25,11 +24,11 @@ namespace Syldra
         public Vector2 pivot;
         public Vector4 border;
         public Single pixelsPerUnit;
-        public Image.Type type; //Image support is only for plugins that are able to reach and/or need it
         public TextureWrapMode wrapMode;
         public FilterMode filterMode;
         public SpriteMeshType meshType;
         public string textureOverride = "";
+        public Dictionary<string, string> customData;
 
         public static bool ExportFromSprite(Sprite spr, string fullPath, bool useTextureRect = false, string textureOverride = "")
         {
@@ -69,11 +68,11 @@ namespace Syldra
             pivot = new Vector2();
             border = new Vector4();
             pixelsPerUnit = 1f;
-            type = Image.Type.Simple;
             wrapMode = TextureWrapMode.Clamp;
             filterMode = FilterMode.Point;
             meshType = SpriteMeshType.Tight;
             textureOverride = "";
+            customData = new Dictionary<string, string>();
 
             foreach (string datatype in strings)
             {
@@ -103,9 +102,6 @@ namespace Syldra
                     case "pixelsperunit":
                         SetPPU(kvp[1]);
                         break;
-                    case "type":
-                        SetType(kvp[1]);
-                        break;
                     case "wrapmode":
                         SetWrap(kvp[1]);
                         break;
@@ -119,7 +115,7 @@ namespace Syldra
                         SetTextureOverride(kvp[1]);
                         break;
                     default:
-                        ModComponent.Log.LogWarning((object)$"SpriteData [{name}]: Unknown key \"{kvp[0]}\"");
+                        customData.Add(kvp[0], kvp[1]);
                         break;
 
                 }
@@ -178,32 +174,6 @@ namespace Syldra
         {
             textureOverride = path;
             hasTO = true;
-        }
-        public void SetType(string input)
-        {
-            switch (input.ToLower())//so we don't have to check for capitalization
-            {
-                case "simple":
-                    type = Image.Type.Simple;
-                    hasType = true;
-                    break;
-                case "sliced":
-                    type = Image.Type.Sliced;
-                    hasType = true;
-                    break;
-                case "tiled":
-                    type = Image.Type.Tiled;
-                    hasType = true;
-                    break;
-                case "filled":
-                    type = Image.Type.Filled;
-                    hasType = true;
-                    break;
-                default:
-                    ModComponent.Log.LogInfo((object)$"SpriteData [{name}]: Invalid type: {input}.");
-                    break;
-            }
-            //ModComponent.Log.LogInfo(type);
         }
         public void SetWrap(string input)
         {
@@ -268,6 +238,16 @@ namespace Syldra
                     ModComponent.Log.LogInfo((object)$"SpriteData[{name}]: Invalid mesh type: {input}.");
                     break;
             }
+        }
+
+        public bool HasCustomData(string key)
+        {
+            return customData.ContainsKey(key);
+        }
+
+        public string GetCustomData(string key)
+        {
+            return customData.TryGetValue(key, out var data) ? data.ToString() : string.Empty;  
         }
     }
 }
