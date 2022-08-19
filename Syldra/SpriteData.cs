@@ -249,5 +249,41 @@ namespace Syldra
         {
             return customData.TryGetValue(key, out var data) ? data.ToString() : string.Empty;  
         }
+
+        public Sprite CreateSpriteFromData(Texture2D tex = null,string basePath = "")
+        {
+            if(tex == null)
+            {
+                //we're likely using TO
+                if (hasTO)
+                {
+                    //this assumes they remember to pass basePath
+                    tex = Functions.ReadTextureFromFile(Path.Combine(basePath, textureOverride + ".png"),Path.GetFileName(textureOverride));
+                }
+                else
+                {
+                    //likely unintended behavior, but we can use this to just create a blank texture at this width/height for whatever reason
+                    tex = new Texture2D((int)rect.width, (int)rect.height) {
+                        wrapMode = this.wrapMode,
+                        filterMode = this.filterMode
+                        
+                    };
+                }
+            }
+            //now that tex is guaranteed not null, we can actually create a sprite
+            Sprite spr = Sprite.Create(
+                tex,
+                hasRect ? rect : new Rect(0, 0, tex.width, tex.height),
+                hasPivot ? pivot : new Vector2(0.5f, 0.5f),
+                hasPPU ? pixelsPerUnit : 1f,
+                0,
+                SpriteMeshType.Tight,
+                hasBorder ? border : new Vector4(0, 0, 0, 0)
+            );
+            tex.wrapMode = hasWrap ? wrapMode : TextureWrapMode.Clamp;
+            spr.name = name;
+            spr.hideFlags = HideFlags.HideAndDontSave;
+            return spr;
+        }
     }
 }

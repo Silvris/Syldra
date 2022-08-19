@@ -175,23 +175,5 @@ namespace Syldra
                 UnityEngine.Object.Destroy(readable);
             }
         }
-
-        // Default Sprite generation from SpriteData
-        public static Sprite CreateSprite(Texture2D tex, SpriteData sd)
-        {
-            Sprite spr = Sprite.Create(
-                tex,
-                sd.hasRect ? sd.rect : new Rect(0, 0, tex.width, tex.height),
-                sd.hasPivot ? sd.pivot : new Vector2(0.5f, 0.5f),
-                sd.hasPPU ? sd.pixelsPerUnit : 1f,
-                0,
-                SpriteMeshType.Tight,
-                sd.hasBorder ? sd.border : new Vector4(0, 0, 0, 0)
-                );
-            tex.wrapMode = sd.hasWrap ? sd.wrapMode : TextureWrapMode.Clamp;
-            spr.name = sd.name;
-            spr.hideFlags = HideFlags.HideAndDontSave;
-            return spr;
-        }
     }
 }
