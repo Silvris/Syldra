@@ -42,6 +42,12 @@ namespace Syldra
                 if (spr.packed || useTextureRect)
                 {
                     Rect textureRect = spr.GetTextureRect();
+                    textureRect.x = Mathf.Round(textureRect.x);
+                    textureRect.y = Mathf.Round(textureRect.y);
+                    //thanks mirage tower
+                    textureRect.width = Mathf.Round(spr.rect.width);
+                    textureRect.height = Mathf.Round(spr.rect.height);
+                    //round the texture rect, since it gets mad when you give it decimals
                     sprData += $"Rect = [{textureRect.x},{textureRect.y},{textureRect.width},{textureRect.height}]\n";
                 }
                 else sprData += $"Rect = [{spr.rect.x},{spr.rect.y},{spr.rect.width},{spr.rect.height}]\n";
@@ -78,16 +84,15 @@ namespace Syldra
             {
 
                 List<string> kvp = new List<string>(datatype.Split('='));
-                foreach (string v in kvp)
+                for (int i = 0; i < kvp.Count;i++)
                 {
-                    v.Trim();
+                    kvp[i] = kvp[i].Trim();
                 }
                 if (kvp.Count != 2)
                 {
                     ModComponent.Log.LogWarning((object)$"SpriteData [{name}]: Invalid entry (unable to distinguish key)");
                     return;
                 }
-                //ModComponent.Log.LogInfo(kvp[0].ToLower());
                 switch (kvp[0].ToLower())
                 {
                     case "rect":
@@ -262,10 +267,12 @@ namespace Syldra
                 }
                 else
                 {
+                    EntryPoint.Instance.Log.LogInfo((object)"Tex is null, TO is not present");
                     //likely unintended behavior, but we can use this to just create a blank texture at this width/height for whatever reason
                     tex = new Texture2D((int)rect.width, (int)rect.height) {
                         wrapMode = this.wrapMode,
-                        filterMode = this.filterMode
+                        filterMode = this.filterMode,
+                        name = "Missing Texture"
                         
                     };
                 }
