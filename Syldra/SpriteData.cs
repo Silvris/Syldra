@@ -78,7 +78,7 @@ namespace Syldra
             filterMode = FilterMode.Point;
             meshType = SpriteMeshType.Tight;
             textureOverride = "";
-            customData = new Dictionary<string, string>();
+            customData = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
             foreach (string datatype in strings)
             {
