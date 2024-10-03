@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -76,7 +77,7 @@ namespace Syldra
             pixelsPerUnit = 1f;
             wrapMode = TextureWrapMode.Clamp;
             filterMode = FilterMode.Point;
-            meshType = SpriteMeshType.Tight;
+            meshType = SpriteMeshType.FullRect;
             textureOverride = "";
             customData = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -135,11 +136,11 @@ namespace Syldra
                 ModComponent.Log.LogWarning((object)$"SpriteData [{name}]: Invalid rect length. Expected 4, got {vals.Length}.");
                 return;
             }
-            rect.x = Convert.ToSingle(vals[0]);
-            rect.y = Convert.ToSingle(vals[1]);
-            rect.width = Convert.ToSingle(vals[2]);
-            rect.height = Convert.ToSingle(vals[3]);
-            //ModComponent.Log.LogInfo($"{rect.x} {rect.y} {rect.width} {rect.height}");
+            rect.x = Convert.ToSingle(vals[0], new CultureInfo("en-US"));
+            rect.y = Convert.ToSingle(vals[1], new CultureInfo("en-US"));
+            rect.width = Convert.ToSingle(vals[2], new CultureInfo("en-US"));
+            rect.height = Convert.ToSingle(vals[3], new CultureInfo("en-US"));
+            //ModComponent.Log.LogInfo((object)$"{rect.x} {rect.y} {rect.width} {rect.height}");
             hasRect = true;
         }
         public void SetPivot(string input)
@@ -150,9 +151,9 @@ namespace Syldra
                 ModComponent.Log.LogInfo((object)$"SpriteData [{name}]: Invalid pivot length. Expected 2, got {vals.Length}.");
                 return;
             }
-            pivot.x = Convert.ToSingle(vals[0]);
-            pivot.y = Convert.ToSingle(vals[1]);
-            //ModComponent.Log.LogInfo($"{pivot.x} {pivot.y}");
+            pivot.x = Convert.ToSingle(vals[0], new CultureInfo("en-US"));
+            pivot.y = Convert.ToSingle(vals[1], new CultureInfo("en-US"));
+            //ModComponent.Log.LogInfo((object)$"{pivot.x} {pivot.y}");
             hasPivot = true;
         }
         public void SetBorder(string input)
@@ -163,11 +164,11 @@ namespace Syldra
                 ModComponent.Log.LogInfo((object)$"SpriteData [{name}]: Invalid border length. Expected 4, got {vals.Length}.");
                 return;
             }
-            border.x = Convert.ToSingle(vals[0]);
-            border.y = Convert.ToSingle(vals[1]);
-            border.z = Convert.ToSingle(vals[2]);
-            border.w = Convert.ToSingle(vals[3]);
-            //ModComponent.Log.LogInfo($"{border.x} {border.y} {border.z} {border.w}");
+            border.x = Convert.ToSingle(vals[0], new CultureInfo("en-US"));
+            border.y = Convert.ToSingle(vals[1], new CultureInfo("en-US"));
+            border.z = Convert.ToSingle(vals[2], new CultureInfo("en-US"));
+            border.w = Convert.ToSingle(vals[3], new CultureInfo("en-US"));
+            //ModComponent.Log.LogInfo((object)$"{border.x} {border.y} {border.z} {border.w}");
             hasBorder = true;
         }
         public void SetPPU(string input)
@@ -204,7 +205,7 @@ namespace Syldra
                     ModComponent.Log.LogInfo((object)$"SpriteData [{name}]: Invalid wrap mode: {input}.");
                     break;
             }
-            //ModComponent.Log.LogInfo(type);
+            //ModComponent.Log.LogInfo(input);
         }
         public void SetFilterMode(string input)
         {
@@ -284,7 +285,7 @@ namespace Syldra
                 hasPivot ? pivot : new Vector2(0.5f, 0.5f),
                 hasPPU ? pixelsPerUnit : 1f,
                 0,
-                SpriteMeshType.Tight,
+                meshType,
                 hasBorder ? border : new Vector4(0, 0, 0, 0)
             );
             tex.wrapMode = hasWrap ? wrapMode : TextureWrapMode.Clamp;
