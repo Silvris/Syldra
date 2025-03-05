@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Syldra
 {
-    [BepInPlugin("ffpr.Syldra", "Syldra Library", "1.1.0")]
+    [BepInPlugin("ffpr.Syldra", "Syldra Library", "1.2.0")]
     [BepInProcess("FINAL FANTASY.exe")]
     [BepInProcess("FINAL FANTASY II.exe")]
     [BepInProcess("FINAL FANTASY III.exe")]
