@@ -4,9 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Syldra
 {
@@ -85,6 +83,9 @@ namespace Syldra
             {
 
                 List<string> kvp = new List<string>(datatype.Split('='));
+#if DEBUG
+                ModComponent.Log.LogInfo((object)$"SpriteData: {datatype}");
+#endif
                 for (int i = 0; i < kvp.Count;i++)
                 {
                     kvp[i] = kvp[i].Trim();
@@ -256,7 +257,7 @@ namespace Syldra
             return customData.TryGetValue(key, out var data) ? data.ToString() : string.Empty;  
         }
 
-        public Sprite CreateSpriteFromData(Texture2D tex = null,string basePath = "")
+        public Sprite CreateSpriteFromData(Texture2D? tex = null,string basePath = "")
         {
             if(tex == null)
             {

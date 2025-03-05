@@ -1,11 +1,6 @@
-﻿using HarmonyLib;
-using Last.Management;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -45,7 +40,7 @@ namespace Syldra
 
             return children;
         }
-        public static GameObject GetDirectChild(GameObject obj, string childName)
+        public static GameObject? GetDirectChild(GameObject obj, string childName)
         {
 
             if (obj != null)
@@ -104,13 +99,13 @@ namespace Syldra
                 texture.hideFlags = HideFlags.HideAndDontSave;
                 return texture;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
 
         }
-        private static Texture2D CopyAsReadable(Texture texture)
+        private static Texture2D? CopyAsReadable(Texture texture)
         {
             if (texture == null)
                 return null;
@@ -170,9 +165,12 @@ namespace Syldra
             }
             else
             {
-                Texture2D readable = CopyAsReadable(asset);
-                WriteTextureToFile(readable, fullPath);
-                UnityEngine.Object.Destroy(readable);
+                Texture2D? readable = CopyAsReadable(asset);
+                if (readable != null)
+                {
+                    WriteTextureToFile(readable, fullPath);
+                    UnityEngine.Object.Destroy(readable);
+                }
             }
         }
     }
